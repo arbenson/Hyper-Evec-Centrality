@@ -72,7 +72,7 @@ function read_data_weighted(dataset::String, order::Int64, exact_match::Bool=fal
     if order == 5; return SymTensor5(I[1], I[2], I[3], I[4], I[5], V, dim, 5); end
 end
 
-""" Compute largest real eigenvector of A with unit 1-norm """
+# Compute largest real eigenvector of A with unit 1-norm
 function LR_evec(A::SpFltMat)
     evec = eigs(A, nev=1, which=:LR, tol=1e-5, maxiter=200)[2][:,1]
     if evec[1] < 0; evec = -evec; end
@@ -89,14 +89,11 @@ function Z_evec_dynsys(T::SymTensor, tol::Float64=1e-5, niter::Int64=200)
         print("$i of $niter \r")
         flush(STDOUT)
         x_next = x_curr + h * f(x_curr)
-
         s = x_next ./ x_curr
         converged = (maximum(s) - minimum(s)) / minimum(s) < tol
         if converged; break; end
-
         x_curr = x_next
     end
-
     evec = x_curr
     return (evec, converged)
 end
@@ -120,22 +117,18 @@ function H_evec_NQI(T::SymTensor, niter::Int64=2000, tol::Float64=1e-5)
     return (x, converged)
 end
 
-function CMEC(T::SymTensor)
-    W = squeeze_tensor(T)
-    lcc = MatrixNetworks.largest_component(W)[2]
-    inds = find(lcc)
-    return (LR_evec(W[inds, inds]), true, lcc)
+function CEC(T::SymTensor)
+    c = LR_evec(squeeze_tensor(T))
+    return (c / norm(c, 1), true)
 end
 
 function ZEC(T::SymTensor)
-    Tcc, lcc = largest_component(T)[1:2]
-    (centrality, converged) = Z_evec_dynsys(Tcc)
-    return (centrality, converged, lcc)
+    (c, converged) = Z_evec_dynsys(T)
+    return (c / norm(c, 1), converged)
 end
 
 function HEC(T::SymTensor)
-    Tcc, lcc, ind_map = largest_component(T)
-    centrality, converged = H_evec_LZI(Tcc)
-    return (centrality, converged, lcc)
+    c, converged = H_evec_NQI(T)
+    return (c / norm(c, 1), converged)
 end
 ;
