@@ -7,17 +7,15 @@ function summary_statistics(dataset::String, exact::Bool, kunif::Int)
     Tcc, lcc = largest_component(T)
     nnodes = Tcc.dimension
     nnz = length(Tcc.I1)
-    println("$(nnodes) & $(nnz) &")
+    println("# nodes = $nnodes")
+    println("nnz = $nnz")
 end
 
-function top_ranked(dataset::String, exact::Bool, numtop::Int64, combined::Bool=false)
-    exact_int = convert(Int64, exact)
-
+function top_ranked(dataset::String, numtop::Int64, combined::Bool=false)
     label_mat = Array{String}(numtop, 9)
     col_ind = 1
-
     for k in [3, 4, 5]
-        data = matread("output/$dataset-$(k)-$(exact_int).mat")
+        data = matread("results/$dataset-$(k).mat")
         lcc_labels = data["lcc_labels"]
         cec_c, hec_c, zec_c = data["cec_c"], data["hec_c"], data["zec_c"]
 
