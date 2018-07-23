@@ -1,7 +1,7 @@
 using MatrixNetworks
 using Combinatorics
 
-immutable SymTensor3
+type SymTensor3
     I1::Vector{Int64}
     I2::Vector{Int64}
     I3::Vector{Int64}
@@ -10,7 +10,7 @@ immutable SymTensor3
     order::Int64
 end
 
-immutable SymTensor4
+type SymTensor4
     I1::Vector{Int64}
     I2::Vector{Int64}
     I3::Vector{Int64}
@@ -20,7 +20,7 @@ immutable SymTensor4
     order::Int64
 end
 
-immutable SymTensor5
+type SymTensor5
     I1::Vector{Int64}
     I2::Vector{Int64}
     I3::Vector{Int64}
