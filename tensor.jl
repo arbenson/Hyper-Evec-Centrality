@@ -1,5 +1,4 @@
 using MatrixNetworks
-using Combinatorics
 
 type SymTensor3
     I1::Vector{Int64}
@@ -7,7 +6,6 @@ type SymTensor3
     I3::Vector{Int64}
     V::Vector{Float64}
     dimension::Int64
-    order::Int64
 end
 
 type SymTensor4
@@ -17,7 +15,6 @@ type SymTensor4
     I4::Vector{Int64}    
     V::Vector{Float64}
     dimension::Int64
-    order::Int64
 end
 
 type SymTensor5
@@ -28,7 +25,6 @@ type SymTensor5
     I5::Vector{Int64}
     V::Vector{Float64}
     dimension::Int64
-    order::Int64
 end
 const SymTensor = Union{SymTensor3, SymTensor4, SymTensor5}
 const SpFltMat = SparseMatrixCSC{Float64,Int64}
