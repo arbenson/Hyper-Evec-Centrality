@@ -71,12 +71,12 @@ function rank_corr(dataset::String, index_start::Int64, k::Int64)
     hec_zec = [corspearman(hec_c[(end-s):end], zec_c[(end-s):end]) for s in ran]
 
     xs = collect(ran) + 1
-    semilogx(xs, cec_hec, linestyle="-",  lw=1,   label="CEC->HEC")
-    semilogx(xs, cec_zec, linestyle="-",  lw=3.5, label="CEC->ZEC")
-    semilogx(xs, zec_cec, linestyle="--", lw=2.25,  label="ZEC->CEC")
-    semilogx(xs, zec_hec, linestyle="--", lw=1,   label="ZEC->HEC")
-    semilogx(xs, hec_cec, linestyle=":",  lw=2.25,   label="HEC->CEC")
-    semilogx(xs, hec_zec, linestyle=":",  lw=3.5, label="HEC->ZEC")
+    semilogx(xs, cec_hec, linestyle="-",  lw=1,    label="CEC-HEC")
+    semilogx(xs, cec_zec, linestyle="-",  lw=3.5,  label="CEC-ZEC")
+    semilogx(xs, zec_cec, linestyle="--", lw=2.25, label="ZEC-CEC")
+    semilogx(xs, zec_hec, linestyle="--", lw=1,    label="ZEC-HEC")
+    semilogx(xs, hec_cec, linestyle=":",  lw=2.25, label="HEC-CEC")
+    semilogx(xs, hec_zec, linestyle=":",  lw=3.5,  label="HEC-ZEC")
 
     fsz = 20
     ax = gca()
