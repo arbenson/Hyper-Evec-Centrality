@@ -5,8 +5,8 @@ using StatsBase
 function summary_statistics(dataset::String, k::Int64)
     data = matread("results/$dataset-$k.mat")    
     nnodes, nnz = data["nnodes"], data["nnz"]
-    println("# nodes = $nnodes")
-    println("nnz = $nnz")
+    println("# nodes: $nnodes")
+    println("nnz (ignoring symmetries): $nnz")
 end
 
 function top_ranked(dataset::String, numtop::Int64, combined::Bool=false)
@@ -104,3 +104,4 @@ function get_rank(dataset::String, k::Int, target_label::String)
         end
     end
 end
+;

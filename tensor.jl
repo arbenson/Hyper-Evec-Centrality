@@ -100,9 +100,9 @@ function reduce(T::SymTensor4, x::Vector{Float64})
         vx12, vx13, vx14 = (v * x[i1]) * [x[i2], x[i3], x[i4]]
         vx23, vx24       = (v * x[i2]) * [x[i3], x[i4]]
         vx34             = (v * x[i3]) * x[i4]
-        push!(I, i1,   i1,   i1,   i2,   i2,   i3)
-        push!(J, i2,   i3,   i4,   i3,   i4,   i4)
-        push!(V, vx34, vx24, vx23, vx14, vx23, vx12)
+        push!(I, i1,    i1,    i1,    i2,    i2,    i3)
+        push!(J, i2,    i3,    i4,    i3,    i4,    i4)
+        push!(V, 2vx34, 2vx24, 2vx23, 2vx14, 2vx13, 2vx12)
     end
     n = T.dimension
     A = convert(SpFltMat, sparse(I, J, V, n, n))
@@ -121,9 +121,9 @@ function reduce(T::SymTensor5, x::Vector{Float64})
         vx234, vx235        = (v * x2 * x3) * [x4, x5]
         vx245               = (v * x2 * x4) * x5
         vx345               = (v * x3 * x4) * x5
-        push!(I, i1,    i1,    i1,    i1,    i2,    i2,    i2,    i3,    i3,    i4)
-        push!(J, i2,    i3,    i4,    i5,    i3,    i4,    i5,    i4,    i5,    i5)
-        push!(V, vx345, vx245, vx235, vx234, vx145, vx135, vx134, vx125, vx124, vx123)
+        push!(I, i1,     i1,     i1,     i1,     i2,     i2,     i2,     i3,     i3,     i4)
+        push!(J, i2,     i3,     i4,     i5,     i3,     i4,     i5,     i4,     i5,     i5)
+        push!(V, 6vx345, 6vx245, 6vx235, 6vx234, 6vx145, 6vx135, 6vx134, 6vx125, 6vx124, 6vx123)
     end
     n = T.dimension
     A = convert(SpFltMat, sparse(I, J, V, n, n))
