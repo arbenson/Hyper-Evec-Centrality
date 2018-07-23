@@ -187,7 +187,7 @@ function largest_component(T::SymTensor3)
             push!(V, v)
         end
     end
-    return (SymTensor3(I1, I2, I3, V, new_dim, 3), lcc, ind_map)
+    return (SymTensor3(I1, I2, I3, V, new_dim), lcc, ind_map)
 end
 
 function largest_component(T::SymTensor4)
@@ -206,7 +206,7 @@ function largest_component(T::SymTensor4)
             push!(V, v)
         end
     end
-    return (SymTensor4(I1, I2, I3, I4, V, new_dim, 4), lcc, ind_map)
+    return (SymTensor4(I1, I2, I3, I4, V, new_dim), lcc, ind_map)
 end
 
 function largest_component(T::SymTensor5)
@@ -226,5 +226,5 @@ function largest_component(T::SymTensor5)
             push!(V, v)
         end
     end
-    return (SymTensor5(I1, I2, I3, I4, I5, V, new_dim, 5), lcc, ind_map)
+    return (SymTensor5(I1, I2, I3, I4, I5, V, new_dim), lcc, ind_map)
 end

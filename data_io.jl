@@ -1,3 +1,5 @@
+using Combinatorics
+
 function read_data_unweighted(dataset::String, order::Int64, exact_match::Bool=false)
     if order < 3 || order > 5; throw("Only support for order-3,4,5 tensors"); end
     
@@ -10,7 +12,7 @@ function read_data_unweighted(dataset::String, order::Int64, exact_match::Bool=f
     for nvert in nverts
         simp = simplices[curr_ind:(curr_ind + nvert - 1)]
         curr_ind += nvert
-        if (exact_match && nvert != order); continue ;end
+        if (exact_match && nvert != order); continue; end
         for hedge in combinations(simp, order)
             push!(S, NTuple{order,Int64}(hedge))
         end

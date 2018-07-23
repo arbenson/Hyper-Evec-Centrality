@@ -29,8 +29,7 @@ function Z_evec_dynsys(T::SymTensor, tol::Float64=1e-5, niter::Int64=200)
 end
 
 # NQI algorithm for computing the leading H-eigenvector.
-function H_evec_NQI(T::SymTensor, niter::Int64=2000, tol::Float64=1e-5)
-    m = T.order
+function H_evec_NQI(T::SymTensor, m::Int64, niter::Int64=2000, tol::Float64=1e-5)
     converged = false
     x = ones(Float64, T.dimension) / T.dimension
     y = apply(T, x)
@@ -58,7 +57,12 @@ function ZEC(T::SymTensor)
 end
 
 function HEC(T::SymTensor)
-    c, converged = H_evec_NQI(T)
+    m = 0
+    if typeof(T) == SymTensor3; m = 3; end
+    if typeof(T) == SymTensor4; m = 4; end
+    if typeof(T) == SymTensor5; m = 5; end
+    if m == 0; throw("Only support for order-3,4,5 tensors"); end
+    c, converged = H_evec_NQI(T, m)
     return (c / norm(c, 1), converged)
 end
 
@@ -80,7 +84,7 @@ function collect_data(dataset::String, k::Int, exact::Bool)
                   "hec_converged" => hec_conv,
                   "zec_c"         => zec_c,
                   "zec_converged" => zec_conv,                     
-                  "order"         => kunif,
+                  "order"         => k,
                   "lcc_labels"    => lcc_labels,
                   "nnz"           => length(Tcc.I1),
                   "nnodes"        => Tcc.dimension))

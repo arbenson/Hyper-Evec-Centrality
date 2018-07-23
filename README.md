@@ -38,6 +38,10 @@ Notice that the projected Hessian is indefinite since it has both a negative and
 
 ## Reproduce the figures and tables in the paper
 
+
+
+
+
 ##### Figures 2, 3, and 4.
 
 ```julia
