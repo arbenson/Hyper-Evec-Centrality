@@ -10,9 +10,35 @@ For questions, please email Austin at arb@cs.cornell.edu.
 
 ### Data
 
-The tags and DAWN datasets are in the `data/` directory. These files were downloaded directly from [here](http://www.cs.cornell.edu/~arb/data/tags-ask-ubuntu/index.html) and [here](http://www.cs.cornell.edu/~arb/data/DAWN/index.html).
+The tags and DAWN datasets are in the `data/` directory. These files were downloaded directly from [here](http://www.cs.cornell.edu/~arb/data/tags-ask-ubuntu/index.html) and [here](http://www.cs.cornell.edu/~arb/data/DAWN/index.html). The ngrams dataset is available from https://www.ngrams.info/, but I cannot include the data directly due to the usage terms. The script `data/convert_ngrams.jl ` can be used to convert the ngrams data into a format that can be automatically read by the existing code.
 
-### Examples computing eigenvectors
+### Examples for computing eigenvectors
+
+```julia
+include("centrality.jl")
+# Create the hypergraph adjacency tensor for the hypergraph in Proposition 2.8.
+# Hyperedges: {{1, 2, 3}, {1, 2, 4}, {3, 5, 6}, {5, 6, 7}}
+T = SymTensor3([1, 1, 3, 5], [2, 2, 5, 6], [3, 4, 6, 7], ones(Float64, 4), 7)
+
+# We might first want to take the largest component.
+Tlcc, lcc_inds = largest_component(T)
+# However, the hypergraph is connected here.
+
+# Clique motif Eigenvector Centrality (CEC)
+(cec_c, cec_converged) = CEC(T)
+# Z-eigenvector Centrality (ZEC)
+(zec_c, zec_converged) = ZEC(T)
+# H-eigenvector Centrality (HEC)
+(hec_c, hec_converged) = HEC(T)
+```
+
+
+
+### Computational experiments for the sunflower graph.
+
+
+
+
 
 ### Computational experiment backing up the proof of Proposition 2.8
 
@@ -38,17 +64,42 @@ Notice that the projected Hessian is indefinite since it has both a negative and
 
 ## Reproduce the figures and tables in the paper
 
+First, we need to compute all of the centralities. Here is an exmaple for the 4-uniform tags dataset. This code is designed to use the data format of the temporal higher-order networks available [here](http://www.cs.cornell.edu/~arb/data/).
 
+```julia
+include("centrality.jl")
+collect_data("tags-ask-ubuntu", 4, false)  # produces tags-ask-ubuntu-4.mat
+collect_data("DAWN", 5, true)  # produces DAWN-5.mat
+```
 
+In the second command, the parameter "4" means 4-uniform hypergraph, and the parameter "false" means to not look for exact size matching in the dataset. In this case, A size-5 hyperedge becomes five different size-4 hyperedges. In the third command, we look at a 5-uniform hypergraph, and we only take hyperedges in the original data since the third parameter is set to "true".
 
+We have stored all of the computational results in the `results/` directory:
+
+-  `results/ngrams-{3,4,5}.mat`
+-  `results/tags-ask-ubuntu-{3,4,5}.mat`
+-  `results/DAWN-{3,4,5}.mat`
 
 ##### Figures 2, 3, and 4.
 
+These are the rank correlation plots.
+
 ```julia
 include("paper_tables_and_figures.jl")
+
+# Create ngrams-{3,4,5}-rankcorr.eps (x axis starts from 20)
+for k in [3, 4, 5]; rank_corr("ngrams", k, 20); end 
+
+# Create tags-ask-ubuntu-{3,4,5}-rankcorr.eps (x axis starts from 10)
+for k in [3, 4, 5]; rank_corr("tags-ask-ubuntu", k, 10); end
+
+# Create DAWN-{3,4,5}-rankcorr.eps (x axis starts from 10)
+for k in [3, 4, 5]; rank_corr("DAWN", k, 10); end
 ```
 
 ##### Table 1
+
+This table has the summary statistics of the datasets.
 
 ```julia
 include("paper_tables_and_figures.jl")
@@ -58,3 +109,22 @@ for k in [3, 4, 5]; summary_statistics("tags-ask-ubuntu", k); end
 ```
 
 ##### Tables 2, 3, and 4
+
+These are the top-k ranked elements according to the centrality vectors.
+
+```julia
+include("paper_tables_and_figures.jl")
+
+# Table 2 
+# Print top-20 words in ngrams datasets in a single row
+top_ranked("ngrams", 20, true)
+
+# Table 3
+# Print top-10 tags in ask ubuntu dataset; one block for each hypergraph uniformity.
+top_ranked("tags-ask-ubuntu", 10, false)
+
+# Table 4
+# Print top-10 drugs in DAWN dataset; one block for each hypergraph uniformity.
+top_ranked("DAWN", 10, false)
+```
+

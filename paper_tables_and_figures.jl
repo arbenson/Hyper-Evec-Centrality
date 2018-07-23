@@ -9,7 +9,8 @@ function summary_statistics(dataset::String, k::Int64)
     println("nnz (ignoring symmetries): $nnz")
 end
 
-function top_ranked(dataset::String, numtop::Int64, combined::Bool=false)
+# Top ranked items
+function top_ranked(dataset::String, numtop::Int64, singlerow::Bool=false)
     label_mat = Array{String}(numtop, 9)
     col_ind = 1
     for k in [3, 4, 5]
@@ -29,26 +30,27 @@ function top_ranked(dataset::String, numtop::Int64, combined::Bool=false)
         local_label_mat[:, 2] = get_top_labels(zec_c)
         local_label_mat[:, 3] = get_top_labels(hec_c)
 
-        if !combined
+        if !singlerow
             for i in 1:numtop
-                str = join(collect(local_label_mat[i, :]), " & ")
+                str = join([lowercase(s) for s in collect(local_label_mat[i, :])], " & ")
                 str = "& $i & $(str) \\\\"
                 println(str)
             end
+            println("--------------------")
         end
     end
 
-    if combined
+    if singlerow
         for i in 1:numtop
-            strs = [split(s, "[")[1] for s in collect(label_mat[i, :])]
-            str = join(strs, " & ")
+            str = join([lowercase(s) for s in collect(label_mat[i, :])], " & ")            
             str = "$i & $(str) \\\\"
             println(str)
         end
     end
 end
 
-function rank_corr(dataset::String, index_start::Int64, k::Int64)
+# Rank correlation plot
+function rank_corr(dataset::String, k::Int64, index_start::Int64)
     close()
     data = matread("results/$dataset-$k.mat")
     cec_c, zec_c, hec_c = data["cec_c"], data["zec_c"], data["hec_c"]
