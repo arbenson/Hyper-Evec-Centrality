@@ -1,4 +1,4 @@
-include("HypergraphEvecCentrality.jl")
+include("centrality.jl")
 using Base.Test
 using Combinatorics
 
@@ -114,5 +114,11 @@ function test5()
         end
     end
     @test Y ≈ full(reduce(T, x))
+end
+
+function main()
+    test3()
+    test4()
+    test5()
 end
 ;

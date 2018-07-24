@@ -228,3 +228,4 @@ function largest_component(T::SymTensor5)
     end
     return (SymTensor5(I1, I2, I3, I4, I5, V, new_dim), lcc, ind_map)
 end
+;

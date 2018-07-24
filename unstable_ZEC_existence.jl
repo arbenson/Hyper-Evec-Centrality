@@ -29,3 +29,4 @@ function main()
     spectrum = eig(C_sym)[1]
     println("Spectrum of projected Hessian of the Lagrangian: $spectrum")
 end
+;
