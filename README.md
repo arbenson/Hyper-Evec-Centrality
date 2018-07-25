@@ -32,15 +32,7 @@ Tlcc, lcc_inds = largest_component(T)
 (hec_c, hec_converged) = HEC(T)
 ```
 
-
-
-### Computational experiments for the sunflower graph.
-
-
-
-
-
-### Computational experiment backing up the proof of Proposition 2.8
+### Computational experiments for Proposition 2.8
 
 Proposition 2.8 says that Z-eigenvector centrality (ZEC) vectors can be unstable in the sense of the definitions [the paper](https://epubs.siam.org/doi/abs/10.1137/100801482) from Kolda and Mayo analyzing their symmetric shifted higher-order power method for computing Z-eigenvectors of symmetric tensors. The consequence is that we cannot rely on power-method like algorithms for computing ZEC vectors. This script contains the computational experiments demonstrating the proof of the proposition:
 
@@ -61,6 +53,16 @@ Spectrum of projected Hessian of the Lagrangian: [-2.82842, -2.82842, -2.82842, 
 ```
 
 Notice that the projected Hessian is indefinite since it has both a negative and positive eigenvalue.
+
+### Computational experiments for sunflower hypergraphs.
+
+The paper provides analytic results for sunflower hypergraphs where the core is a singleton. The script `sunflower.jl ` provides numerical evidence for both the results listed in the right of Figure 1 and Proposition 2.12.
+
+```julia
+include("sunflower.jl")
+sf_test1()  # computational experiments related to the table within Figure 1.
+sf_test2()  # computational experiments related to Proposition 2.12.
+```
 
 ## Reproduce the figures and tables in the paper
 
