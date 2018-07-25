@@ -10,7 +10,7 @@ function read_data_unweighted(dataset::String, order::Int64, exact_match::Bool=f
     curr_ind = 1
     S = Set{NTuple{order,Int64}}()
     for nvert in nverts
-        simp = simplices[curr_ind:(curr_ind + nvert - 1)]
+        simp = sort(simplices[curr_ind:(curr_ind + nvert - 1)])
         curr_ind += nvert
         if (exact_match && nvert != order); continue; end
         for hedge in combinations(simp, order)
