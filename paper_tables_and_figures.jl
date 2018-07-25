@@ -32,6 +32,8 @@ function top_ranked(dataset::String, numtop::Int64, singlerow::Bool=false)
 
         if !singlerow
             for i in 1:numtop
+                #str = [join(split(s)[2:end], " ") for s in collect(local_label_mat[i, :])]
+                #str = join([lowercase(s) for s in str], " & ")
                 str = join([lowercase(s) for s in collect(local_label_mat[i, :])], " & ")
                 str = "& $i & $(str) \\\\"
                 println(str)
