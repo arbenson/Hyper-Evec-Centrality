@@ -2,7 +2,7 @@
 
 This code and data repository accompanies the paper
 
-- Three hypergraph eigenvector centralities. Austin R. Benson. Submitted, 2018.
+- Three hypergraph eigenvector centralities. Austin R. Benson. [arXiv:1807.09644](http://arxiv.org/abs/1807.09644), 2018.
 
 All of the code is written in Julia.
 
