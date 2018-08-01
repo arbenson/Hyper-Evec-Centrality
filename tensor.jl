@@ -32,7 +32,7 @@ const SpFltMat = SparseMatrixCSC{Float64,Int64}
 function apply(T::SymTensor3, x::Vector{Float64})
     dim = T.dimension
     if length(x) != dim
-        throw("Vector dimension does not match tensor dimension")
+        error("Vector dimension does not match tensor dimension")
     end
     y = zeros(Float64, dim)
     for (i1, i2, i3, v) in zip(T.I1, T.I2, T.I3, T.V)
@@ -47,7 +47,7 @@ end
 function apply(T::SymTensor4, x::Vector{Float64})
     dim = T.dimension
     if length(x) != dim
-        throw("Vector dimension does not match tensor dimension")
+        error("Vector dimension does not match tensor dimension")
     end
     y = zeros(Float64, dim)
     for (i1, i2, i3, i4, v) in zip(T.I1, T.I2, T.I3, T.I4, T.V)
@@ -63,7 +63,7 @@ end
 function apply(T::SymTensor5, x::Vector{Float64})
     dim = T.dimension
     if length(x) != dim
-        throw("Vector dimension does not match tensor dimension")
+        error("Vector dimension does not match tensor dimension")
     end
     y = zeros(Float64, dim)
     for (i1, i2, i3, i4, i5, v) in zip(T.I1, T.I2, T.I3, T.I4, T.I5, T.V)

@@ -1,7 +1,7 @@
 using Combinatorics
 
 function read_data_unweighted(dataset::String, order::Int64, exact_match::Bool=false)
-    if order < 3 || order > 5; throw("Only support for order-3,4,5 tensors"); end
+    if order < 3 || order > 5; error("Only support for order-3,4,5 tensors"); end
     
     read(filename::String) = convert(Vector{Int64}, readdlm(filename, Int64)[:, 1])
     simplices = read("data/$(dataset)/$(dataset)-simplices.txt")

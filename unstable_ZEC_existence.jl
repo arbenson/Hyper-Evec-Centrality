@@ -1,4 +1,4 @@
-include("HypergraphEvecCentrality.jl")
+include("centrality.jl")
 
 function main()
     m = 3

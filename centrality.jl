@@ -61,7 +61,7 @@ function HEC(T::SymTensor)
     if typeof(T) == SymTensor3; m = 3; end
     if typeof(T) == SymTensor4; m = 4; end
     if typeof(T) == SymTensor5; m = 5; end
-    if m == 0; throw("Only support for order-3,4,5 tensors"); end
+    if m == 0; error("Only support for order-3,4,5 tensors"); end
     c, converged = H_evec_NQI(T, m)
     return (c / norm(c, 1), converged)
 end
