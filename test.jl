@@ -1,10 +1,11 @@
 include("centrality.jl")
-using Base.Test
 using Combinatorics
+using Random
+using Test
 
 function test3()
     dim = 11
-    srand(1234)
+    Random.seed!(1234)
     
     entries = collect(combinations(1:dim, 3))
     vals = rand(length(entries))
@@ -36,12 +37,12 @@ function test3()
             Y[i, j] += Tijk * x[k]
         end
     end
-    @test Y ≈ full(reduce(T, x))
+    @test Y ≈ Matrix(reduce(T, x))
 end
 
 function test4()
     dim = 10
-    srand(1234)
+    Random.seed!(1234)
     
     entries = collect(combinations(1:dim, 4))
     vals = rand(length(entries))
@@ -74,12 +75,12 @@ function test4()
             Y[i, j] += Tijkl * x[k] * x[l]
         end
     end
-    @test Y ≈ full(reduce(T, x))
+    @test Y ≈ Matrix(reduce(T, x))
 end
 
 function test5()
     dim = 9
-    srand(1234)
+    Random.seed!(1234)
     
     entries = collect(combinations(1:dim, 5))
     vals = rand(length(entries))
@@ -113,7 +114,7 @@ function test5()
             Y[i, j] += Tijklm * x[k] * x[l] * x[m]
         end
     end
-    @test Y ≈ full(reduce(T, x))
+    @test Y ≈ Matrix(reduce(T, x))
 end
 
 function main()
