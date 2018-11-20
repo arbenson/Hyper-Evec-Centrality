@@ -12,6 +12,23 @@ For questions, please email Austin at arb@cs.cornell.edu.
 
 The tags and DAWN datasets are in the `data/` directory. These files were downloaded directly from [here](http://www.cs.cornell.edu/~arb/data/tags-ask-ubuntu/index.html) and [here](http://www.cs.cornell.edu/~arb/data/DAWN/index.html). The ngrams dataset is available from https://www.ngrams.info/, but I cannot include the data directly due to the usage terms. The script `data/convert_ngrams.jl ` can be used to convert the ngrams data into a format that can be automatically read by the existing code.
 
+### Setup
+
+First, you can download the code:
+
+```bash
+git clone https://github.com/arbenson/Hyper-Evec-Centrality.git
+```
+
+The code is written in Julia 1.0. You will need the following packages:
+
+```julia
+using Pkg
+
+```
+
+
+
 ### Examples for computing eigenvectors
 
 ```julia
@@ -45,10 +62,10 @@ The output should look something like the following
 
 ```
 dynamical systems algorithm converged: true
-tensor z-eigenvalue: 1.4142111552433778
+tensor z-eigenvalue: 1.4142111552433783
 tensor z-eigenvector (2-norm normalized): [0.408248, 0.408248, 0.471403, 0.235704, 0.408248, 0.408248, 0.235704]
-orthogonality test (should be close to 0): 1.1102230246251565e-16
-orthonormality test (should be close to 0): 1.4383797347324747e-15
+orthogonality test (should be close to 0): 9.71445146547012e-16
+orthonormality test (should be close to 0): [3.70907e-16, 2.66455e-16, 2.35813e-16, 2.87556e-16, 1.0074e-15, 9.14796e-16]
 Spectrum of projected Hessian of the Lagrangian: [-2.82842, -2.82842, -2.82842, -2.06111, -1.41421, 0.646902]
 ```
 
