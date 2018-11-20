@@ -1,6 +1,7 @@
 using MatrixNetworks
+using SparseArrays
 
-type SymTensor3
+struct SymTensor3
     I1::Vector{Int64}
     I2::Vector{Int64}
     I3::Vector{Int64}
@@ -8,7 +9,7 @@ type SymTensor3
     dimension::Int64
 end
 
-type SymTensor4
+struct SymTensor4
     I1::Vector{Int64}
     I2::Vector{Int64}
     I3::Vector{Int64}
@@ -17,7 +18,7 @@ type SymTensor4
     dimension::Int64
 end
 
-type SymTensor5
+struct SymTensor5
     I1::Vector{Int64}
     I2::Vector{Int64}
     I3::Vector{Int64}
@@ -26,6 +27,7 @@ type SymTensor5
     V::Vector{Float64}
     dimension::Int64
 end
+
 const SymTensor = Union{SymTensor3, SymTensor4, SymTensor5}
 const SpFltMat = SparseMatrixCSC{Float64,Int64}
 
@@ -176,7 +178,7 @@ function largest_component(T::SymTensor3)
     lcc = MatrixNetworks.largest_component(squeeze_tensor(T))[2]
     ind_map = zeros(Int64, length(lcc))
     new_dim = sum(lcc)
-    ind_map[find(lcc)] = collect(1:new_dim)
+    ind_map[findall(lcc)] = collect(1:new_dim)
     I1, I2, I3 = Int64[], Int64[], Int64[]
     V = Float64[]
     for (i1, i2, i3, v) in zip(T.I1, T.I2, T.I3, T.V)
@@ -194,7 +196,7 @@ function largest_component(T::SymTensor4)
     lcc = MatrixNetworks.largest_component(squeeze_tensor(T))[2]
     ind_map = zeros(Int64, length(lcc))
     new_dim = sum(lcc)
-    ind_map[find(lcc)] = collect(1:new_dim)
+    ind_map[findall(lcc)] = collect(1:new_dim)
     I1, I2, I3, I4 = Int64[], Int64[], Int64[], Int64[]
     V = Float64[]
     for (i1, i2, i3, i4, v) in zip(T.I1, T.I2, T.I3, T.I4, T.V)    
@@ -213,7 +215,7 @@ function largest_component(T::SymTensor5)
     lcc = MatrixNetworks.largest_component(squeeze_tensor(T))[2]
     ind_map = zeros(Int64, length(lcc))
     new_dim = sum(lcc)
-    ind_map[find(lcc)] = collect(1:new_dim)
+    ind_map[findall(lcc)] = collect(1:new_dim)
     I1, I2, I3, I4, I5 = Int64[], Int64[], Int64[], Int64[], Int64[]
     V = Float64[]
     for (i1, i2, i3, i4, i5, v) in zip(T.I1, T.I2, T.I3, T.I4, T.I5, T.V)

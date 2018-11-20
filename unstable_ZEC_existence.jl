@@ -1,5 +1,7 @@
 include("centrality.jl")
 
+using Statistics
+
 function main()
     m = 3
     dim = 7
@@ -17,16 +19,17 @@ function main()
     println("tensor z-eigenvector (2-norm normalized): $(z2)")
 
     # Check for stability
-    Ustar = qr((I - z2 * z2') * randn(dim, dim - 1), thin=true)[1]
+    Ustar = Array(qr((I - z2 * z2') * randn(dim, dim - 1)).Q)
     maxval = maximum(z2' * Ustar )
     println("orthogonality test (should be close to 0): $(maxval)")
-    diff = vecnorm(Ustar' * Ustar - eye(dim - 1))
-    println("orthonormality test (should be close to 0): $(diff)")    
+    diff = Ustar' * Ustar - I
+    diffnorm = [norm(vec(diff[:, ind]), 2) for ind in 1:size(diff)[2]]
+    println("orthonormality test (should be close to 0): $(diffnorm)")    
 
-    C = Ustar' * ((m - 1) * reduce(T, z2) - λ1 * eye(dim)) * Ustar
-    U = triu(C, 1) # for symmetrization
-    C_sym = full(U + U' + diagm(diag(C)))
-    spectrum = eig(C_sym)[1]
+    C = Ustar' * ((m - 1) * reduce(T, z2) - λ1 * I) * Ustar
+    U = triu(C, 1)  # for symmetrization
+    C_sym = Matrix(U + U' + Diagonal(C))
+    spectrum = eigen(C_sym).values
     println("Spectrum of projected Hessian of the Lagrangian: $spectrum")
 end
 ;

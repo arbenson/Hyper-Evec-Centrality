@@ -4,13 +4,41 @@ This code and data repository accompanies the paper
 
 - Three hypergraph eigenvector centralities. Austin R. Benson. [arXiv:1807.09644](http://arxiv.org/abs/1807.09644), 2018.
 
-All of the code is written in Julia.
+All of the code is written in Julia 1.0.
 
 For questions, please email Austin at arb@cs.cornell.edu.
 
 ### Data
 
-The tags and DAWN datasets are in the `data/` directory. These files were downloaded directly from [here](http://www.cs.cornell.edu/~arb/data/tags-ask-ubuntu/index.html) and [here](http://www.cs.cornell.edu/~arb/data/DAWN/index.html). The ngrams dataset is available from https://www.ngrams.info/, but I cannot include the data directly due to the usage terms. The script `data/convert_ngrams.jl ` can be used to convert the ngrams data into a format that can be automatically read by the existing code.
+The tags and DAWN datasets are in the `data/` directory. These files were downloaded directly from [here](http://www.cs.cornell.edu/~arb/data/tags-ask-ubuntu/index.html) and [here](http://www.cs.cornell.edu/~arb/data/DAWN/index.html). The ngrams dataset is available from https://www.ngrams.info/, but I cannot include the data directly due to the usage terms. The script `data/convert_ngrams.jl ` can be used to convert the raw ngrams data into a format that can be automatically read by the existing code.
+
+### Setup
+
+First, download the code:
+
+```bash
+git clone https://github.com/arbenson/Hyper-Evec-Centrality.git
+```
+
+The code is written in Julia 1.0. To reproduce everything, you will need the following packages:
+
+```julia
+using Pkg
+Pkg.add("Arpack")
+Pkg.add("Combinatorics")
+Pkg.add("FileIO")
+Pkg.add("JLD2")
+Pkg.add("MatrixNetworks")
+Pkg.add("PyPlot")
+Pkg.add("StatsBase")
+```
+
+Then you can test the code
+
+```julia
+include("test.jl")
+main()
+```
 
 ### Examples for computing eigenvectors
 
@@ -45,10 +73,10 @@ The output should look something like the following
 
 ```
 dynamical systems algorithm converged: true
-tensor z-eigenvalue: 1.4142111552433778
+tensor z-eigenvalue: 1.4142111552433783
 tensor z-eigenvector (2-norm normalized): [0.408248, 0.408248, 0.471403, 0.235704, 0.408248, 0.408248, 0.235704]
-orthogonality test (should be close to 0): 1.1102230246251565e-16
-orthonormality test (should be close to 0): 1.4383797347324747e-15
+orthogonality test (should be close to 0): 9.71445146547012e-16
+orthonormality test (should be close to 0): [3.70907e-16, 2.66455e-16, 2.35813e-16, 2.87556e-16, 1.0074e-15, 9.14796e-16]
 Spectrum of projected Hessian of the Lagrangian: [-2.82842, -2.82842, -2.82842, -2.06111, -1.41421, 0.646902]
 ```
 
@@ -64,23 +92,23 @@ sf_test1()  # computational experiments related to the table within Figure 1.
 sf_test2()  # computational experiments related to Proposition 2.12.
 ```
 
-## Reproduce the figures and tables in the paper
+### Reproduce the figures and tables in the paper
 
 First, we need to compute all of the centralities. Here is an exmaple for the 4-uniform tags dataset. This code is designed to use the data format of the temporal higher-order networks available [here](http://www.cs.cornell.edu/~arb/data/).
 
 ```julia
 include("centrality.jl")
-collect_data("tags-ask-ubuntu", 4, false)  # produces tags-ask-ubuntu-4.mat
-collect_data("DAWN", 5, true)  # produces DAWN-5.mat
+collect_data("tags-ask-ubuntu", 4, false)  # produces tags-ask-ubuntu-4.jld2
+collect_data("DAWN", 5, true)  # produces DAWN-5.jld2
 ```
 
 In the second command, the parameter "4" means 4-uniform hypergraph, and the parameter "false" means to not look for exact size matching in the dataset. In this case, A size-5 hyperedge becomes five different size-4 hyperedges. In the third command, we look at a 5-uniform hypergraph, and we only take hyperedges in the original data since the third parameter is set to "true".
 
 We have stored all of the computational results in the `results/` directory:
 
--  `results/ngrams-{3,4,5}.mat`
--  `results/tags-ask-ubuntu-{3,4,5}.mat`
--  `results/DAWN-{3,4,5}.mat`
+-  `results/ngrams-{3,4,5}.jld2`
+-  `results/tags-ask-ubuntu-{3,4,5}.jld2`
+-  `results/DAWN-{3,4,5}.jld2`
 
 ##### Figures 2, 3, and 4.
 
