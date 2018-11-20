@@ -1,4 +1,6 @@
 using Combinatorics
+using DelimitedFiles
+
 
 function read_data_unweighted(dataset::String, order::Int64, exact_match::Bool=false)
     if order < 3 || order > 5; error("Only support for order-3,4,5 tensors"); end
@@ -18,7 +20,7 @@ function read_data_unweighted(dataset::String, order::Int64, exact_match::Bool=f
         end
     end
 
-    I = Vector{Vector{Int64}}(order)
+    I = Vector{Vector{Int64}}(undef, order)
     for j in 1:order; I[j] = Vector{Int64}(); end
     for hedge in S
         for (j, v) in enumerate(hedge)

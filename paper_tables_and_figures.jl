@@ -1,9 +1,10 @@
-using MAT
+using FileIO
+using JLD2
 using PyPlot
 using StatsBase
 
 function summary_statistics(dataset::String, k::Int64)
-    data = matread("results/$dataset-$k.mat")    
+    data = load("results/$dataset-$k.jld2")
     nnodes, nnz = data["nnodes"], data["nnz"]
     println("# nodes: $nnodes")
     println("nnz (ignoring symmetries): $nnz")
@@ -11,10 +12,10 @@ end
 
 # Top ranked items
 function top_ranked(dataset::String, numtop::Int64, singlerow::Bool=false)
-    label_mat = Array{String}(numtop, 9)
+    label_mat = Array{String}(undef, numtop, 9)
     col_ind = 1
     for k in [3, 4, 5]
-        data = matread("results/$dataset-$(k).mat")
+        data = load("results/$dataset-$(k).jld2")
         lcc_labels = data["lcc_labels"]
         cec_c, hec_c, zec_c = data["cec_c"], data["hec_c"], data["zec_c"]
 
@@ -25,7 +26,7 @@ function top_ranked(dataset::String, numtop::Int64, singlerow::Bool=false)
         label_mat[:, col_ind] = get_top_labels(zec_c); col_ind += 1
         label_mat[:, col_ind] = get_top_labels(hec_c); col_ind += 1
 
-        local_label_mat = Array{String}(numtop, 3)
+        local_label_mat = Array{String}(undef, numtop, 3)
         local_label_mat[:, 1] = get_top_labels(cec_c)
         local_label_mat[:, 2] = get_top_labels(zec_c)
         local_label_mat[:, 3] = get_top_labels(hec_c)
@@ -54,12 +55,12 @@ end
 # Rank correlation plot
 function rank_corr(dataset::String, k::Int64, index_start::Int64)
     close()
-    data = matread("results/$dataset-$k.mat")
+    data = load("results/$dataset-$k.jld2")
     cec_c, zec_c, hec_c = data["cec_c"], data["zec_c"], data["hec_c"]
     
     start = log10(index_start - 1)
     finish = log10(length(cec_c) - 1)
-    ran = [convert(Int64, round(v)) for v in logspace(start, finish, 500)]
+    ran = [convert(Int64, round(v)) for v in 10 .^ range(start, stop=finish, length=500)]
     
     sp = sortperm(cec_c)
     cec_c, hec_c, zec_c = cec_c[sp], hec_c[sp], zec_c[sp]
@@ -74,7 +75,7 @@ function rank_corr(dataset::String, k::Int64, index_start::Int64)
     hec_cec = [corspearman(hec_c[(end-s):end], cec_c[(end-s):end]) for s in ran]
     hec_zec = [corspearman(hec_c[(end-s):end], zec_c[(end-s):end]) for s in ran]
 
-    xs = collect(ran) + 1
+    xs = collect(ran) .+ 1
     semilogx(xs, cec_hec, linestyle="-",  lw=1,    label="CEC-HEC")
     semilogx(xs, cec_zec, linestyle="-",  lw=3.5,  label="CEC-ZEC")
     semilogx(xs, zec_cec, linestyle="--", lw=2.25, label="ZEC-CEC")
@@ -94,7 +95,7 @@ function rank_corr(dataset::String, k::Int64, index_start::Int64)
 end
 
 function get_rank(dataset::String, k::Int, target_label::String)
-    data = matread("results/$dataset-$k.mat")
+    data = load("results/$dataset-$k.jld2")
     cec_c, hec_c, zec_c = data["cec_c"], data["hec_c"], data["zec_c"]
     n = length(cec_c)
     sp_cec = zeros(Int64, n); sp_cec[sortperm(cec_c, rev=true)] = collect(1:n)

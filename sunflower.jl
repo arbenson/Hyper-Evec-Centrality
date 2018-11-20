@@ -67,9 +67,12 @@ function sf_test1()
         cec_normalized = cec_v[1] ./ cec_v
         zec_normalized = zec_v[1] ./ zec_v
         hec_normalized = hec_v[1] ./ hec_v        
-        println("$(cec_ratio) $(cec_normalized)")
-        println("$(zec_ratio) $(zec_normalized)")
-        println("$(hec_ratio) $(hec_normalized)")
+        println("cec ratio = $(cec_ratio)")
+        println("cec vec = $(cec_normalized)")
+        println("zec ratio = $(zec_ratio)")
+        println("zec vec = $(zec_normalized)")
+        println("hec ratio = $(hec_ratio)")
+        println("hec vec = $(hec_normalized)")
         println("-----")
     end
 end
@@ -79,10 +82,10 @@ function sf_test2()
     S = sunflower3(r)
     c = zeros(2 * r + 1)
     cP = [1.0, 2.0, 3.0, 4.0]
-    c[2:3] = cP[1]
-    c[4:5] = cP[2]
-    c[6:7] = cP[3]
-    c[8:9] = cP[4]
+    c[2:3] .= cP[1]
+    c[4:5] .= cP[2]
+    c[6:7] .= cP[3]
+    c[8:9] .= cP[4]
     c[1] = sqrt(sum(cP .^ 2))
     rat = apply(S, c) ./ c
     println("Elements should be same: $(rat)")
@@ -90,10 +93,10 @@ function sf_test2()
     S = sunflower4(r)
     c = zeros(3 * r + 1)    
     cP = [1.0, 2.0, 3.0, 4.0]
-    c[2:4]   = cP[1]
-    c[5:7]   = cP[2]
-    c[8:10]  = cP[3]
-    c[11:13] = cP[4]
+    c[2:4]   .= cP[1]
+    c[5:7]   .= cP[2]
+    c[8:10]  .= cP[3]
+    c[11:13] .= cP[4]
     c[1] = sqrt(sum(cP .^ 2))
     rat = apply(S, c) ./ c    
     println("Elements should be different: $(rat)")    

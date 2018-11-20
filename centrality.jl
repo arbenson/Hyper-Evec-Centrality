@@ -1,6 +1,10 @@
 include("tensor.jl")
 include("data_io.jl")
-using MAT
+
+using Arpack
+using LinearAlgebra
+using FileIO
+using JLD2
 
 # Compute largest real eigenvector of A with unit 1-norm
 function LR_evec(A::SpFltMat)
@@ -17,7 +21,7 @@ function Z_evec_dynsys(T::SymTensor, tol::Float64=1e-5, niter::Int64=200)
     converged = false
     for i = 1:niter
         print("$i of $niter \r")
-        flush(STDOUT)
+        flush(stdout)
         x_next = x_curr + h * f(x_curr)
         s = x_next ./ x_curr
         converged = (maximum(s) - minimum(s)) / minimum(s) < tol
@@ -35,7 +39,7 @@ function H_evec_NQI(T::SymTensor, m::Int64, niter::Int64=2000, tol::Float64=1e-5
     y = apply(T, x)
     for i in 1:niter
         print("$i of $niter \r")
-        flush(STDOUT)
+        flush(stdout)
         y_scaled = y .^ (1.0 / (m - 1))
         x = y_scaled / norm(y_scaled, 1)
         y = apply(T, x)
@@ -70,24 +74,24 @@ function collect_data(dataset::String, k::Int, exact::Bool)
     T = read_data_unweighted(dataset, k, exact)
     Tcc, lcc = largest_component(T)
     labels = read_node_labels(dataset)
-    lcc_labels = labels[find(lcc)]
+    lcc_labels = labels[findall(lcc)]
     get_top_labels(c::Vector{Float64}) =
         lcc_labels[sortperm(c, rev=true)[1:20]]
     cec_c, cec_conv = CEC(Tcc)
     zec_c, zec_conv  = ZEC(Tcc)
     hec_c, hec_conv  = HEC(Tcc)
     
-    matwrite("$dataset-$k.mat",
-             Dict("cec_c"         => cec_c,
-                  "cec_converged" => cec_conv,
-                  "hec_c"         => hec_c,
-                  "hec_converged" => hec_conv,
-                  "zec_c"         => zec_c,
-                  "zec_converged" => zec_conv,                     
-                  "order"         => k,
-                  "lcc_labels"    => lcc_labels,
-                  "nnz"           => length(Tcc.I1),
-                  "nnodes"        => Tcc.dimension))
+    save("results/$dataset-$k.jld2",
+         Dict("cec_c"         => cec_c,
+              "cec_converged" => cec_conv,
+              "hec_c"         => hec_c,
+              "hec_converged" => hec_conv,
+              "zec_c"         => zec_c,
+              "zec_converged" => zec_conv,                     
+              "order"         => k,
+              "lcc_labels"    => lcc_labels,
+              "nnz"           => length(Tcc.I1),
+              "nnodes"        => Tcc.dimension))
     
     cec_labels = get_top_labels(cec_c)
     zec_labels = get_top_labels(zec_c)
