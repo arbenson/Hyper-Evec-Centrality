@@ -14,9 +14,10 @@ function LR_evec(A::SpFltMat)
 end
 
 # Benson and Gleich algorithm for computing the leading Z-eigenvector.
-function Z_evec_dynsys(T::SymTensor, tol::Float64=1e-5, niter::Int64=200)
+function Z_evec_dynsys(T::SymTensor, tol::Float64=1e-5, niter::Int64=200,
+                       x_init::Vector{Float64}=ones(Float64, T.dimension) / T.dimension)
     f(u::Vector{Float64}) = LR_evec(reduce(T, u)) - u
-    x_curr = ones(Float64, T.dimension) / T.dimension    
+    x_curr = copy(x_init)
     h = 0.5
     converged = false
     for i = 1:niter
