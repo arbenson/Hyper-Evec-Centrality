@@ -64,6 +64,7 @@ end
 function rank_corr(dataset::String, k::Int64, index_start::Int64)
     close()
     cec_c, hec_c, zec_c = read_evecs(dataset, k)
+    @show length(cec_c), length(hec_c), length(zec_c)
     
     start = log10(index_start - 1)
     finish = log10(length(cec_c) - 1)

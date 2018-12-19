@@ -78,7 +78,7 @@ function collect_data(dataset::String, k::Int, exact::Bool)
     lcc_labels = labels[findall(lcc)]
     get_top_labels(c::Vector{Float64}) =
         lcc_labels[sortperm(c, rev=true)[1:20]]
-    cec_c, cec_conv = CEC(Tcc)
+    cec_c, cec_conv  = CEC(Tcc)
     zec_c, zec_conv  = ZEC(Tcc)
     hec_c, hec_conv  = HEC(Tcc)
     
