@@ -2,6 +2,14 @@ using FileIO
 using JLD2
 using PyPlot
 using StatsBase
+using Statistics
+
+function read_evecs(dataset::String, k::Int64)
+    data1 = load("results/$dataset-$k.jld2")
+    data2 = load("results/$dataset-$k-random.jld2")
+    return data1["cec_c"], data1["hec_c"], vec(mean(data2["z_evecs"], dims=2))
+end
+;
 
 function summary_statistics(dataset::String, k::Int64)
     data = load("results/$dataset-$k.jld2")
@@ -17,7 +25,7 @@ function top_ranked(dataset::String, numtop::Int64, singlerow::Bool=false)
     for k in [3, 4, 5]
         data = load("results/$dataset-$(k).jld2")
         lcc_labels = data["lcc_labels"]
-        cec_c, hec_c, zec_c = data["cec_c"], data["hec_c"], data["zec_c"]
+        cec_c, hec_c, zec_c = read_evecs(dataset, k)
 
         get_top_labels(c::Vector{Float64}) =
             [string(s) for s in lcc_labels[sortperm(c, rev=true)[1:numtop]]]
@@ -55,8 +63,7 @@ end
 # Rank correlation plot
 function rank_corr(dataset::String, k::Int64, index_start::Int64)
     close()
-    data = load("results/$dataset-$k.jld2")
-    cec_c, zec_c, hec_c = data["cec_c"], data["zec_c"], data["hec_c"]
+    cec_c, hec_c, zec_c = read_evecs(dataset, k)
     
     start = log10(index_start - 1)
     finish = log10(length(cec_c) - 1)
@@ -95,16 +102,16 @@ function rank_corr(dataset::String, k::Int64, index_start::Int64)
 end
 
 function get_rank(dataset::String, k::Int, target_label::String)
-    data = load("results/$dataset-$k.jld2")
-    cec_c, hec_c, zec_c = data["cec_c"], data["hec_c"], data["zec_c"]
+    cec_c, hec_c, zec_c = read_evecs(dataset, k)    
     n = length(cec_c)
     sp_cec = zeros(Int64, n); sp_cec[sortperm(cec_c, rev=true)] = collect(1:n)
     sp_zec = zeros(Int64, n); sp_zec[sortperm(zec_c, rev=true)] = collect(1:n)
     sp_hec = zeros(Int64, n); sp_hec[sortperm(hec_c, rev=true)] = collect(1:n)    
+    data = load("results/$dataset-$k.jld2")
     labels = data["lcc_labels"]
 
     for (label, cec_rk, zec_rk, hec_rk) in zip(labels, sp_cec, sp_zec, sp_hec)
-        if contains(string(label), target_label)
+        if occursin(target_label, string(label))
             println("$label $(cec_rk) $(zec_rk) $(hec_rk)")
         end
     end
