@@ -12,7 +12,7 @@ function test3()
     T = SymTensor3([e[1] for e in entries],
                    [e[2] for e in entries],
                    [e[3] for e in entries],
-                   vals, dim)
+                   vals)
     entry_vals = Dict{NTuple{3,Int64},Float64}()
     for (e, v) in zip(entries, vals)
         entry_vals[NTuple{3, Int64}(e)] = v
@@ -50,7 +50,7 @@ function test4()
                    [e[2] for e in entries],
                    [e[3] for e in entries],
                    [e[4] for e in entries],                   
-                   vals, dim)
+                   vals)
     entry_vals = Dict{NTuple{4,Int64},Float64}()
     for (e, v) in zip(entries, vals)
         entry_vals[NTuple{4,Int64}(e)] = v
@@ -89,7 +89,7 @@ function test5()
                    [e[3] for e in entries],
                    [e[4] for e in entries],
                    [e[5] for e in entries],                   
-                   vals, dim)
+                   vals)
     entry_vals = Dict{NTuple{5,Int64},Float64}()
     for (e, v) in zip(entries, vals)
         entry_vals[NTuple{5,Int64}(e)] = v

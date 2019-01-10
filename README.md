@@ -46,7 +46,7 @@ main()
 include("centrality.jl")
 # Create the hypergraph adjacency tensor for the hypergraph in Proposition 2.8.
 # Hyperedges: {{1, 2, 3}, {1, 2, 4}, {3, 5, 6}, {5, 6, 7}}
-T = SymTensor3([1, 1, 3, 5], [2, 2, 5, 6], [3, 4, 6, 7], ones(Float64, 4), 7)
+T = SymTensor3([1, 1, 3, 5], [2, 2, 5, 6], [3, 4, 6, 7], ones(Float64, 4))
 
 # We might first want to take the largest component.
 Tlcc, lcc_inds = largest_component(T)

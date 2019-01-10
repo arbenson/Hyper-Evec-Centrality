@@ -8,6 +8,8 @@ struct SymTensor3
     V::Vector{Float64}
     dimension::Int64
 end
+SymTensor3(I1::Vector{Int64}, I2::Vector{Int64}, I3::Vector{Int64}, V::Vector{Float64}) =
+    SymTensor3(I1, I2, I3, V, max(maximum(I1), maximum(I2), maximum(I3)))
 
 struct SymTensor4
     I1::Vector{Int64}
@@ -17,6 +19,9 @@ struct SymTensor4
     V::Vector{Float64}
     dimension::Int64
 end
+SymTensor4(I1::Vector{Int64}, I2::Vector{Int64}, I3::Vector{Int64}, I4::Vector{Int64}, V::Vector{Float64}) =
+    SymTensor4(I1, I2, I3, I4, V, max(maximum(I1), maximum(I2), maximum(I3), maximum(I4)))
+
 
 struct SymTensor5
     I1::Vector{Int64}
@@ -27,6 +32,8 @@ struct SymTensor5
     V::Vector{Float64}
     dimension::Int64
 end
+SymTensor5(I1::Vector{Int64}, I2::Vector{Int64}, I3::Vector{Int64}, I4::Vector{Int64}, I5::Vector{Int64}, V::Vector{Float64}) =
+    SymTensor5(I1, I2, I3, I4, I5, V, max(maximum(I1), maximum(I2), maximum(I3), maximum(I4), maximum(I5)))
 
 const SymTensor = Union{SymTensor3, SymTensor4, SymTensor5}
 const SpFltMat = SparseMatrixCSC{Float64,Int64}
@@ -141,7 +148,7 @@ function squeeze_tensor(T::SymTensor3)
         push!(J, i2, i3, i3)
         push!(V,  v,  v,  v)
     end
-    n = T.dimension    
+    n = T.dimension
     A = convert(SpFltMat, sparse(I, J, V, n, n))
     A + A'
 end
