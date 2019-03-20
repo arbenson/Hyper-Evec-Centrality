@@ -1,5 +1,6 @@
 using FileIO
 using JLD2
+using Distances
 using PyPlot
 using StatsBase
 using Statistics
@@ -7,9 +8,36 @@ using Statistics
 function read_evecs(dataset::String, k::Int64)
     data1 = load("results/$dataset-$k.jld2")
     data2 = load("results/$dataset-$k-random.jld2")
-    return data1["cec_c"], data1["hec_c"], vec(mean(data2["z_evecs"], dims=2))
+
+    # Get mode Z-eigenvector
+    z_evecs = data2["z_evecs"]
+    dists = pairwise(Cityblock(), z_evecs, dims=2)
+    cutoff = 1e-5
+    n = size(z_evecs, 2)
+    # group vectors by distance
+    components = zeros(Int64, n)
+    for i = 1:n
+        if components[i] == 0
+            components[i] = maximum(components) + 1
+        end
+        for j = 1:n
+            if dists[i, j] < cutoff && components[j] == 0
+                components[j] = components[i]
+            end
+        end
+    end
+    # find mode vector index
+    biggest = argmax(counts(components))
+    z_mode_ind = 0
+    for i = 1:n
+        if components[i] == biggest
+            z_mode_ind = i
+            break
+        end
+    end
+    
+    return data1["cec_c"], data1["hec_c"], z_evecs[:, z_mode_ind]
 end
-;
 
 function summary_statistics(dataset::String, k::Int64)
     data = load("results/$dataset-$k.jld2")
